@@ -43,7 +43,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     
     echo("
             <form method='get'>
-            <p>Year : <input type='text' id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
+            <p>Year : <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
             <input type='submit' value='Submit'>
             </p>
             </form>

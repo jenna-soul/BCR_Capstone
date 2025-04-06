@@ -43,9 +43,9 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     
     echo("
             <form method='get'>
-            <p>Year : <input type='text' id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
+            <p>Year : <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
              Month : 
-            <select  id='option' name='option'>
+            <select  id='option' required name='option'>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'January' ? 'selected' : '') . ">January</option>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'February' ? 'selected' : '') . ">February</option>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'March' ? 'selected' : '') . ">March</option>

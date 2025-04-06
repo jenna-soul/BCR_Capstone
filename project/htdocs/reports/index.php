@@ -67,6 +67,9 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         <a href="#" id="empPerformanceLink" class="button btn_newTrans"><i class="fa-solid fa-user fa-xl"></i><br><br>Employee Performance</a>
         <a href="/BCR/htdocs/reports/payroll.php" class="button btn_newTrans"><i class="fa-solid fa-cash-register fa-xl"></i><br><br>Payroll</a>
         </div>';
+    echo '<div class="dashboard reportbtns">
+        <a href="/BCR/htdocs/reports/audit.php" class="button btn_newTrans"><i class="fa-solid fa-chart-simple fa-xl"></i><br><br>Login Audit</a>
+        </div>';
 }
 include ('../includes/footer.php');
 
