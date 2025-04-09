@@ -1,8 +1,8 @@
 <?php
 session_start();
-// Include header
 include('../includes/header.php');
 require_once('../../mysqli_connect.php');
+
 // Check session first
 if (!isset($_SESSION['empid'])){
 	echo("	<h2>You are not logged in.</h2>
@@ -115,7 +115,7 @@ if (!isset($_SESSION['empid'])){
 <p id="searchUpdate"><a href=index.php>Back to Movies</a></p>
 
 <?php
-// Include the footer
+
 include ('../includes/footer.php');
 }
 ?>

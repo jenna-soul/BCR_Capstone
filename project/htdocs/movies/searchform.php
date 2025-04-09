@@ -1,18 +1,23 @@
 <?php 
 session_start();
-//include the header
+
 include ('../includes/header.php');
 require_once('../../mysqli_connect.php');
 
-//check session first
-if (!isset($_SESSION['empid'])){
+if (!isset($_SESSION['empid']) && !isset($_SESSION['email'])){
 	echo("	<h2>You are not logged in.</h2>
 			<form action='/BCR/htdocs/Home/login.php''>
 				<input type='submit' name='submit' value='Login'/>
 			</form>
+			<form action='logincustomer.php'>
+				<input type='submit' name='submit' value='Customer Login'/>
+			</form>
 			<p><br /><br /></p>");
 	exit();
-}else{
+}
+
+
+elseif(isset($_SESSION['empid']) || isset($_SESSION['email'])){
 ?>
 <html>
 <head>
@@ -32,7 +37,6 @@ if (!isset($_SESSION['empid'])){
 // Check if the search form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sanitize user input
-    $emp_id = mysqli_real_escape_string($dbc, $_SESSION['empid']);
     $searchTerm = isset($_POST['searchTerm']) ? mysqli_real_escape_string($dbc, $_POST['searchTerm']) : '';
 
     // Build the query based on the search term
@@ -66,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     if ($num > 0) { // If it ran OK, display the results
     	echo "<h2>Your search returned $num entries.</h2>";
-        echo "<table cellpadding=5 cellspacing=5 border=1 id='allTables'>";
+        echo "<table id='allTables'>";
         echo "<tr>
                 <th>Movie ID</th><th>Title</th><th>Category</th><th>Genre</th><th>Release Year</th><th>Length (Minutes)</th><th>Language</th><th>Lead Actors</th><th>Director</th><th>Status</th><th>Return Date</th><th>Delete Record</th><th>Update Record</th>
               </tr>"; 

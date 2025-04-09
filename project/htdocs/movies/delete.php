@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-//include the header
+
 include ('../includes/header.php');
 require_once('../../mysqli_connect.php');
 

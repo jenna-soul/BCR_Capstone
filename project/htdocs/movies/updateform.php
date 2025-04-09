@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Include the header
+
 include ('../includes/header.php');
 
 // Check session first
@@ -23,7 +23,7 @@ if (!isset($_SESSION['empid'])){
         exit();
     }
 
-    // Fetch the movie details from the database
+    // Get the movie details from the database
     $query = "SELECT * FROM Movies WHERE MovieID = $movieID";
     $result = @mysqli_query($dbc, $query);
     $movie = @mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -134,6 +134,6 @@ if (!isset($_SESSION['empid'])){
     mysqli_close($dbc);
 }
 
-// Include the footer
+
 include ('../includes/footer.php');
 ?>
