@@ -1,9 +1,9 @@
 <?php
 session_start();
-	//include the header
+
 	include ("../includes/header.php");
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -94,7 +94,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 
 <p id="searchUpdate"><a href=index.php>Back to Customers</a></p>
 <?
-	//include the footer
+
 	include ('../includes/footer.php');
 }
 ?>

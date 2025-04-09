@@ -1,10 +1,10 @@
 <?php
 session_start();
-// Include the header
+
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -136,6 +136,5 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     mysqli_close($dbc);
 }
 
-// Include the footer
 include ('../includes/footer.php');
 ?>

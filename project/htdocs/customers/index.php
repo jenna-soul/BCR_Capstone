@@ -1,9 +1,10 @@
 <?php
 session_start();
-	//include the header
-	include ('../includes/header.php');
+
+include ('../includes/header.php');
+
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -53,7 +54,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     <th>Customer ID</th><th>First Name</th><th>Last Name</th><th>Phone</th><th>Street Address</th><th>City</th><th>State</th><th>Zip Code</th><th>Late Fees</th><th>Delete Record</th><th>Update Record</th></tr>"; 
 
 
-    // Fetch and print all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['CustID'] . "</td>"; 
         echo "<td>" . $row['FirstName'] . "</td>"; 
@@ -74,7 +74,9 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 
 	//Make the links to other pages if necessary.
 	if($pages>1){
-		echo '<br/><table id="paging"><tr>';
+		echo '<br/>
+		<div style="width:90%; margin-left:auto; margin-left:auto;">
+		<table id="paging"><tr>';
 		//Determine what page the script is on:
 		$current_page = ($start/$display) + 1;
 		//If it is not the first page, make a Previous button:
@@ -88,15 +90,15 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 			}else{ // if current page, print the page number
 				echo '<td>'. $i. '</td>';
 			}
-		} //End of FOR loop
+		} 
 		//If it is not the last page, make a Next button:
 		if($current_page != $pages){
 			echo '<td><a href="index.php?s=' .($start + $display). '&p='. $pages. '"> Next </a></td>';
 		}
 		
-		echo '</tr></table>';  //Close the table.
-	}//End of pages links
-	//include the footer
+		echo '</tr></table></div>';  
+	}
+
 	include ('../includes/footer.php');
 }
 ?>
