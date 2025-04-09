@@ -1,13 +1,13 @@
 <?php
-if (isset($_POST['submitted'])) {
-	require_once ('../../mysqli_connect.php'); // Connect to database.
-	$errors = array(); 
 
-	// Check for an id.
-	if (empty($_POST['empid'])) {
+if (isset($_POST['submitted'])) {
+	require_once ('../../mysqli_connect.php'); 
+	$errors = array(); 
+	// Check for an email address.
+	if (empty($_POST['email'])) {
 		$errors[] = 'You did not enter an ID.';
 	} else {
-		$e = mysqli_real_escape_string($dbc, trim($_POST['empid']));
+		$e = mysqli_real_escape_string($dbc, trim($_POST['email']));
 	}
 	// Check for a password.
 	if (empty($_POST['password'])) {
@@ -16,23 +16,20 @@ if (isset($_POST['submitted'])) {
 		$p = mysqli_real_escape_string($dbc, $_POST['password']);
 	}
 	if (empty($errors)) { 
-		$query = "SELECT * FROM Users WHERE EmpID='$e' AND password='$p'"; 
+		$query = "SELECT * FROM Customers WHERE Email='$e' AND password='$p'"; 
 		$result = @mysqli_query ($dbc, $query); 
-		$row = mysqli_fetch_array ($result, MYSQLI_NUM);
+		$row = mysqli_fetch_array ($result, MYSQLI_ASSOC);
 		if ($row) { 
 			//Set the session data:
 			session_start(); 
-			$_SESSION['empid'] = $row[0];
-			$_SESSION['first_name'] = $row[1];
-			$_SESSION['last_name'] = $row[2];
-			$_SESSION['Email'] = $row[3]; 
+			$_SESSION['email'] = $row['Email'];        
 
 			//Update the Audit log
 			$query2 ="INSERT INTO Audit(ID,LoginDate) VALUES ('$e',CURRENT_TIMESTAMP) ";
 			$result2 = @mysqli_query ($dbc, $query2); 
 
-			
 			header("Location:../Home/index.php");
+			
 			exit(); 
 		} else { // No record returned 
 			$errors[] = 'The ID and password entered do not match those on file.'; 
@@ -43,7 +40,7 @@ if (isset($_POST['submitted'])) {
 	$errors = NULL;
 } 
 
-$page_title = 'Login';
+$page_title = 'Customer Login';
 include ('../includes/header.php');
 if (!empty($errors)) {
 	echo '<h1 id="mainhead">Error!</h1>
@@ -54,12 +51,13 @@ if (!empty($errors)) {
 	echo '</p><p>Please try again.</p>';
 }
 ?>
-
-<h1 class='pagetitle'>Employee Login</h1>
-<form action="login.php" method="post">
+<style>
+</style>
+<h1 class='pagetitle'>Customer Login</h1>
+<form action="logincustomer.php" method="post">
       <div class="formdiv">
-		<label for="empid">Employee ID:</label>
-		<input type="text" name="empid"  autofocus/> 
+		<label for="email">Email:</label>
+		<input type="text" id="moveInput" name="email"  autofocus /> 
       </div>
       <div class="formdiv">
 		<label for="password">Password:</label>
@@ -69,7 +67,7 @@ if (!empty($errors)) {
 <input type="hidden" name="submitted" value="TRUE" />
 </form>
 
-<div id='accountLinks'><a href='../Home/forgot.php'>Forgot Password?</a></div>;
+<div id='accountLinks'><a href='../Home/forgotcustomer.php'>Forgot Password?</a></div>;
 
 <?php
 include ('../includes/footer.php');

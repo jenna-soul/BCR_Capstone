@@ -1,24 +1,23 @@
 <?php 
-
-// This page lets the user logout.
 session_start(); 
 
 // If no session variable exists, redirect the user.
-if (!isset($_SESSION['empid'])) {
+if (!isset($_SESSION['empid']) && !isset($_SESSION['email'])){
 	header("Location: index.php");
-	exit(); // Quit the script.
+	exit(); 
 } else { // Cancel the session.
-	$_SESSION = array(); // Destroy the variables.
-	session_destroy(); // Destroy the session itself.
+	$_SESSION = array(); 
+	session_destroy(); // Destroy the session.
 }
 
-// Include the header code.
 include ('../includes/header.php');
 
-
 echo("<h2>You are not logged in.</h2>
-<form action='login.php''>
-	<input type='submit' name='submit' value='Login'/>
+<form action='login.php'>
+	<input type='submit' name='submit' value='Employee Login'/>
+</form>
+<form action='loginCustomer.php'>
+	<input type='submit' name='submit' value='Customer Login'/>
 </form>
 <p><br /><br /></p>");
 include ('../includes/footer.php');

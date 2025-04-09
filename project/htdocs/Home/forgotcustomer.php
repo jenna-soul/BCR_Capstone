@@ -1,41 +1,38 @@
 <?php 
-
 include ('../includes/header.php');
 
 if (isset($_POST['submitted'])) {
-	require_once ('../../mysqli_connect.php'); 
-	$errors = array();
+	require_once ('../../mysqli_connect.php'); // Connect to the db.
+	$errors = array(); 
 
-	// Check for an employee login
-	if (empty($_POST['empid'])) {
+	if (empty($_POST['email'])) {
 		$errors[] = 'You forgot to enter your employee ID.';
 	} else {
-		$e = mysqli_real_escape_string($dbc, $_POST['empid']);
+		$e = mysqli_real_escape_string($dbc, $_POST['email']);
 	}
 
 	if (empty($errors)) { 
-		$query = "SELECT * FROM Users WHERE EmpID='$e'"; 
+		$query = "SELECT * FROM Customers WHERE Email='$e'"; 
 		$result = mysqli_query ($dbc, $query);
 		if (mysqli_num_rows($result)==1) {
 			while ($row=mysqli_fetch_array($result, MYSQLI_ASSOC)){
 				$p=$row['password']; 
-				$u=$row['EmpID']; 
+				$u=$row['email']; 
 			}								
-			// Email on send
 			$to=$e; 
-			$subject="Your final project";
+			$subject="Forgotten Password";
 			$body="
-			Thank you very much for being a member of Recipe Directory!\n\n
+			Thank you very much for being a BCR customer!\n\n
 			Here is your password information.\n\n
-			Employee ID: ".$u."\n\n
 			Password: ".$p."\n\n
 			Thanks again!\n\n
-			https://jsoldner.soisweb.uwm.edu/PHP_Flex/Final/htdocs/Home/index.php"; 
-			$headers="From: Your name <jsoldner@uwm.edu>\n";  // <-- Replace this to your email address!!!
-			mail ($to, $subject, $body, $headers); // SEND the message!  
+			https://jsoldner.soisweb.uwm.edu/BCR/htdocs/Home/index.php"; 
+			$headers="From: Your name <jsoldner@uwm.edu>\n"; 
+			mail ($to, $subject, $body, $headers); 
 
+			// Print a message.
 			echo '<h2>Thank you!</h2>
-			<p>Please, check your email to get your ID and password.</p>'; 
+			<p>Please, check your email to get your email and password.</p>'; 
 
 			include ('../includes/footer.php');
 			exit();
@@ -58,9 +55,9 @@ if (isset($_POST['submitted'])) {
 
 ?>
 
-<h2>Forgot Employee ID or Password?</h2>
+<h2>Forgot email or password?</h2>
 <form action="forgot.php" method="post">
-	<p>Employee ID: <input type="text" name="empid" size="20" maxlength="40" style="width: 30%;" value="<?php if (isset($_POST['empid'])) echo $_POST['empid']; ?>"  /> </p>
+	<p>Email: <input type="text" name="email" size="20" maxlength="40" style="width: 30%;" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>"  /> </p>
 	<input type="submit" name="submit" value="Submit" /></p>
 	<input type="hidden" name="submitted" value="TRUE" />
 </form>
