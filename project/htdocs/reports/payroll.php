@@ -1,10 +1,9 @@
 <?php 
 session_start();
-// Include the header
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -59,7 +58,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo "<table id='allTables' style='width:50%;'><tr>
         <th>EmpID</th><th>Employee</th><th>Yearly Salary</th><th>Monthly Salary</th><th>Weekly Salary</th><th>Year</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['EmpID'] . "</td>"; 
         echo "<td>" . $row['Employee'] . "</td>"; 
@@ -75,7 +74,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     ");     
     mysqli_close($dbc); // Close the database connection.
 
-    // Include the footer
     include ('../includes/footer.php');
 }
 ?>

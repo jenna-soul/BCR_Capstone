@@ -1,6 +1,5 @@
 <?php 
 session_start();
-// Include the header
 include ('../includes/header.php');
 
 //check session first
@@ -33,7 +32,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     }
     // Display the page content if the user is a manager
 
-
     // Get the year and month from the form
     $selectedYear = isset($_GET['year']) ? $_GET['year'] : date("Y");
     $selectedMonth = isset($_GET['option']) ? $_GET['option'] : date("F");
@@ -41,14 +39,14 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo ("<center>"); 
     echo ("<h1 class='pagetitle'>Monthly Expenses - {$selectedYear}</h1>");
     
-    echo("
+    echo("<div class='formdiv'>
             <form method='get'>
-            <p>Year : <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
-            <input type='submit' value='Submit'>
-            </p>
+                <label for='year'>Year:</label>
+                <input type='text' required id='year' style='margin-right:1%;' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
+    
+                <input type='submit' value='Submit'>
             </form>
-            ");
-
+        </div>");
     // Query to get all expenses for each month
     $query = "SELECT YEAR(m.PurchaseDate) AS Year, 
                         MONTH(m.PurchaseDate) AS Month, 
@@ -80,7 +78,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo "<table id='allTables' style='width:50%;'><tr>
         <th>Year</th><th>Month</th><th>Total Monthly Expenses</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['Year'] . "</td>"; 
         echo "<td>" . $row['Month'] . "</td>"; 
@@ -88,11 +86,12 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     }
     echo "</table>";   
 
+
     // Monthly Revenue
     echo "<table id='allTables' style='width:15%; text-align:center;'><tr>
         <th style='text-align:center;'>Total  {$selectedYear}  Expenses</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['TotalExpenses'] . "</td>"; 
     }
@@ -103,7 +102,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     ");     
     mysqli_close($dbc); // Close the database connection.
 
-    // Include the footer
     include ('../includes/footer.php');
 }
 ?>

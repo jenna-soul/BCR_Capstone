@@ -1,10 +1,9 @@
 <?php 
 session_start();
-// Include the header
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -42,10 +41,12 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo ("<h1 class='pagetitle'>Audit Log - {$selectedMonth} {$selectedYear}</h1>");
     
     echo("
-            <form method='get'>
-            <p>Year : <input type='text' id='year' required name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
-             Month : 
-            <select  id='option' required name='option'>
+    <div class='formdiv'>
+        <form method='get'>
+		    <label for='year'>Year:</label>
+            <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
+		    <label for='month'>Month:</label>
+            <select  id='option' required name='option' style='width:25%; margin-right:1%;'>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'January' ? 'selected' : '') . ">January</option>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'February' ? 'selected' : '') . ">February</option>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'March' ? 'selected' : '') . ">March</option>
@@ -60,8 +61,8 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'December' ? 'selected' : '') . ">December</option>
             </select>
             <input type='submit' value='Submit'>
-            </p>
-            </form>
+        </form>
+    </div>
             ");
     // Convert the month name to a number
     $monthMapping = [
@@ -84,28 +85,25 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     // Query to get employee performance for the selected year and month
     $query = "
             SELECT 	a.AuditID, 
-                    a.EmpID, 
-                    a.LoginDate, 
-                    CONCAT(u.FirstName, ' ', u.LastName) AS Employee 
+                    a.ID, 
+                    a.LoginDate
             FROM Audit a 
-            JOIN Users u ON a.EmpID = u.EmpID 
             WHERE YEAR(a.LoginDate) = '$selectedYear' 
             AND MONTH(a.LoginDate) = '$monthNumber'
-            GROUP BY u.EmpID, a.LoginDate, a.AuditID 
+            GROUP BY a.ID, a.LoginDate, a.AuditID 
             ORDER BY LoginDate DESC;";
     
     $result = @mysqli_query($dbc, $query);
 
     // Table header:
     echo "<table id='allTables'><tr>
-        <th>Audit ID</th><th>Employee ID</th><th>Login Time</th><th>Employee Name</th></tr>"; 
+        <th>Audit ID</th><th>Employee/Customer ID</th><th>Login Time</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['AuditID'] . "</td>"; 
-        echo "<td>" . $row['EmpID'] . "</td>"; 
-        echo "<td>" . $row['LoginDate'] . "</td>";
-        echo "<td>" . $row['Employee'] . "</td></tr>";   
+        echo "<td>" . $row['ID'] . "</td>"; 
+        echo "<td>" . $row['LoginDate'] . "</td></tr>";   
     }
     echo "</table>";   
     echo("
@@ -113,7 +111,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     ");     
     mysqli_close($dbc); // Close the database connection.
 
-    // Include the footer
     include ('../includes/footer.php');
 }
 ?>

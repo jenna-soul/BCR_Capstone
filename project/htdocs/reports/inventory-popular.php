@@ -1,10 +1,9 @@
 <?php 
 session_start();
-// Include the header
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -42,10 +41,12 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo ("<h1 class='pagetitle'>Most Popular Movies - {$selectedMonth} {$selectedYear}</h1>");
     
     echo("
-            <form method='get'>
-            <p>Year : <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
-             Month : 
-            <select  id='option' required name='option'>
+    <div class='formdiv'>
+        <form method='get'>
+		    <label for='year'>Year:</label>
+            <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
+		    <label for='month'>Month:</label>
+            <select  id='option' required name='option' style='width:25%; margin-right:1%;'>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'January' ? 'selected' : '') . ">January</option>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'February' ? 'selected' : '') . ">February</option>
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'March' ? 'selected' : '') . ">March</option>
@@ -60,8 +61,8 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
                 <option " . (isset($_GET['option']) && $_GET['option'] == 'December' ? 'selected' : '') . ">December</option>
             </select>
             <input type='submit' value='Submit'>
-            </p>
-            </form>
+        </form>
+    </div>
             ");
     // Convert the month name to a number
     $monthMapping = [
@@ -103,7 +104,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo "<table id='allTables' style='width:50%;'><tr>
         <th>Movie ID</th><th>Movie Title</th><th>Rental Count</th><th>Month</th><th>Year</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['MovieID'] . "</td>"; 
         echo "<td>" . $row['MovieTitle'] . "</td>"; 
@@ -119,7 +120,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     ");     
     mysqli_close($dbc); // Close the database connection.
 
-    // Include the footer
     include ('../includes/footer.php');
 }
 ?>

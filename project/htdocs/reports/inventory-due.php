@@ -1,10 +1,9 @@
 <?php 
 session_start();
-// Include the header
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -33,11 +32,8 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     }
     // Display the page content if the user is a manager
 
-
     echo ("<center>"); 
     echo ("<h1 class='pagetitle'>Transactions Past Due Date as of " .date("Y/m/d")."</h1>");
-
-
 
     // Query to get transactions passed the due date
     $query = "SELECT 
@@ -65,7 +61,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo "<table id='allTables' style='width:50%;'><tr>
         <th>Movie ID</th><th>Movie Title</th><th>Transaction ID</th><th>Customer ID</th><th>Customer</th><th>Customer Phone</th><th>Customer Email</th><th>Rental Date</th><th>Due Date</th><th>Days Past Due</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['MovieID'] . "</td>"; 
         echo "<td>" . $row['MovieTitle'] . "</td>"; 
@@ -87,7 +83,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     mysqli_close($dbc); // Close the database connection.
 
 
-    // Include the footer
     include ('../includes/footer.php');
 }
 ?>

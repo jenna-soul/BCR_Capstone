@@ -38,30 +38,31 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     $selectedYear = isset($_GET['year']) ? $_GET['year'] : date("Y");
     $selectedMonth = isset($_GET['option']) ? $_GET['option'] : date("F");
 
-    echo ("<center>"); 
-    echo ("<h1 class='pagetitle'>Monthly Revenue - {$selectedMonth} {$selectedYear}</h1>");
-    
+    echo ("<h1 class='pagetitle'>Revenue - {$selectedMonth} {$selectedYear}</h1>");
     echo("
-            <form method='get'>
-            <p>Year : <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
-             Month : 
-            <select  id='option' required name='option'>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'January' ? 'selected' : '') . ">January</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'February' ? 'selected' : '') . ">February</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'March' ? 'selected' : '') . ">March</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'April' ? 'selected' : '') . ">April</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'May' ? 'selected' : '') . ">May</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'June' ? 'selected' : '') . ">June</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'July' ? 'selected' : '') . ">July</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'August' ? 'selected' : '') . ">August</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'September' ? 'selected' : '') . ">September</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'October' ? 'selected' : '') . ">October</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'November' ? 'selected' : '') . ">November</option>
-                <option " . (isset($_GET['option']) && $_GET['option'] == 'December' ? 'selected' : '') . ">December</option>
-            </select>
-            <input type='submit' value='Submit'>
-            </p>
-            </form>
+      <div class='formdiv'>
+                <form method='get'>
+		            <label for='year'>Year:</label>
+                    <input type='text' required id='year' name='year' placeholder='Year' value='" . (isset($_GET['year']) ? $_GET['year'] : '') . "' />
+		            <label for='month'>Month:</label>
+                    <select  id='option' required name='option' style='width:25%; margin-right:1%;'>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'January' ? 'selected' : '') . ">January</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'February' ? 'selected' : '') . ">February</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'March' ? 'selected' : '') . ">March</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'April' ? 'selected' : '') . ">April</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'May' ? 'selected' : '') . ">May</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'June' ? 'selected' : '') . ">June</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'July' ? 'selected' : '') . ">July</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'August' ? 'selected' : '') . ">August</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'September' ? 'selected' : '') . ">September</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'October' ? 'selected' : '') . ">October</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'November' ? 'selected' : '') . ">November</option>
+                        <option " . (isset($_GET['option']) && $_GET['option'] == 'December' ? 'selected' : '') . ">December</option>
+                    </select>
+                    <input type='submit' value='Submit'>
+                    </p>
+                </form>
+            </div>
             ");
     // Convert the month name to a number
     $monthMapping = [
