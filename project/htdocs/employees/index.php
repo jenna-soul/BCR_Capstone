@@ -1,10 +1,10 @@
 <?php 
 session_start();
-// Include the header
+
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -49,7 +49,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         $row = @mysqli_fetch_array($result, MYSQLI_NUM);
         $records = $row[0]; // Get the number of records
 
-        // Calculate the number of pages ...
+        // Calculate the number of pages 
         if ($records > $display) { // More than 1 page is needed
             $pages = ceil($records / $display);
         } else {
@@ -57,7 +57,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         }
     }
 
-    // Determine where in the database to start returning results ...
     if (isset($_GET['s']) && is_numeric($_GET['s'])){
         $start = $_GET['s'];
     } else {
@@ -72,7 +71,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo "<table id='allTables'><tr>
         <th>Employee ID</th><th>First Name</th><th>Last Name</th><th>Phone</th><th>Street Address</th><th>City</th><th>State</th><th>Zip Code</th><th>Email</th><th>Salary</th><th>Work Hours</th><th>Is Manager</th><th>Delete Record</th><th>Update Record</th></tr>"; 
 
-    // Fetch and print all the records
+    // Get all the records
     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
         echo "<tr><td>" . $row['EmpID'] . "</td>"; 
         echo "<td>" . $row['FirstName'] . "</td>"; 
@@ -99,7 +98,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         echo '<br/><table id="paging"><tr>';
         // Determine what page the script is on:
         $current_page = ($start / $display) + 1;
-        // If it is not the first page, make a Previous button:
+        // If it is not the first page, make a Previous button
         if ($current_page != 1) {
             echo '<td><a href="index.php?s=' . ($start - $display) . '&p=' . $pages. '"> Previous </a></td>';
         }
@@ -116,10 +115,9 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
             echo '<td><a href="index.php?s=' . ($start + $display) . '&p=' . $pages . '"> Next </a></td>';
         }
 
-        echo '</tr></table>';  // Close the table.
-    } // End of pages links
+        echo '</tr></table>';  
+    } 
 
-    // Include the footer
     include ('../includes/footer.php');
 }
 ?>

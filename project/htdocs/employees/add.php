@@ -1,10 +1,9 @@
 <?php
 session_start();
-// Include the header
 include("../includes/header.php");
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -40,7 +39,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         $city = $_POST['city'];
         $state = $_POST['state'];
         $zip = $_POST['zip'];
-        $salary = $_POST['salary'];  // Capture the salary
+        $salary = $_POST['salary'];  
         $isManager = ($_POST['isManager'] == 'Yes') ? 1 : 0;  // Convert 'Yes' to 1 and 'No' to 0
 
         // SQL Query to insert data into the Users table
@@ -129,7 +128,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 <p id="searchUpdate"><a href=index.php>Back to Employees</a></p>
 
 <?php
-// Include the footer
+
 include('../includes/footer.php');
 }
 ?>

@@ -1,9 +1,10 @@
 <?php
 session_start();
-//check session first
+
 include ('../includes/header.php');
 require_once('../../mysqli_connect.php');
-if (!isset($_SESSION['empid'])){// Print a customized message.
+
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -56,11 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($searchTerm)) {
         // Check if the search term is numeric or a valid date
         if (is_numeric($searchTerm)) {
-            // Numeric fields (e.g., EmpID, Phone)
+            // Numeric fields
             $query .= " AND (EmpID = '$searchTerm' 
                             OR Phone LIKE '%$searchTerm%')";
         } else {
-            // Text fields (e.g., FirstName, LastName, Email, City, State)
+            // Text fields 
             $query .= " AND (FirstName LIKE '%$searchTerm%' 
                             OR LastName LIKE '%$searchTerm%' 
                             OR Email LIKE '%$searchTerm%' 
@@ -73,13 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = @mysqli_query($dbc, $query);
     $num = mysqli_num_rows($result);
     
-    if ($num > 0) { // If it ran OK, display the results
+    if ($num > 0) {
         echo "<h2>Your search returned $num entries.</h2>";
         echo "<table cellpadding=5 cellspacing=5 border=1 id='allTables'>";
         echo "<tr>
                 <th>EmpID</th><th>FirstName</th><th>LastName</th><th>Phone</th><th>Email</th><th>City</th><th>State</th><th>WorkHours</th><th>Salary</th><th>Manager</th><th>Delete</th><th>Update Record</th>
               </tr>"; 
-        // Fetch and display all records
+        // Get all records
         while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
             echo "<tr><td>".$row['EmpID']."</td>";
             echo "<td>".$row['FirstName']."</td>";

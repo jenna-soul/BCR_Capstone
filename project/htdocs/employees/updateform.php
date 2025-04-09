@@ -1,10 +1,10 @@
 <?php
 session_start();
-// Include the header
+
 include ('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
         <form action='login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -41,7 +41,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         exit();
     }
 
-    // Fetch the employee details from the database
+    // Get the employee details from the database
     $query = "SELECT * FROM Users WHERE EmpID = $empID";
     $result = @mysqli_query($dbc, $query);
     $employee = @mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -76,7 +76,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 
     // Check if the form is submitted
     if (isset($_POST['updateEmployee'])) {
-        // Sanitize the inputs
+        // Clean inputs
         $empID = $_POST['empID'];
         $firstName = mysqli_real_escape_string($dbc, $_POST['firstName']);
         $lastName = mysqli_real_escape_string($dbc, $_POST['lastName']);
@@ -90,7 +90,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         $workHours = $_POST['workHours'];
         $isManager = $_POST['isManager'];
 
-        // Perform the update query excluding the password
+        // Perform the update query without the password
         $updateQuery = "UPDATE Users SET 
                             FirstName = '$firstName',
                             LastName = '$lastName',
@@ -163,6 +163,6 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     mysqli_close($dbc);
 }
 
-// Include the footer
+
 include ('../includes/footer.php');
 ?>
