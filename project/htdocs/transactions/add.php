@@ -1,10 +1,9 @@
 <?php
 session_start();
-// Include the header
 include("../includes/header.php");
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
 			<form action='/BCR/htdocs/Home/login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -19,11 +18,11 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 
     require_once('../../mysqli_connect.php');
 
-    // Fetch customers for dropdown
+    // Get customers for dropdown
     $custQuery = "SELECT CustID, FirstName, LastName FROM Customers WHERE LateFees <10 ORDER BY LastName, FirstName";
     $custResult = @mysqli_query($dbc, $custQuery);
     
-    // Fetch available movies
+    // Get available movies
     $movieQuery = "SELECT MovieID, Title, Lang, Cost FROM Movies WHERE Status='Available' ORDER BY Title";
     $movieResult = @mysqli_query($dbc, $movieQuery);
     
@@ -31,20 +30,18 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     $transactionCompleted = false;
     
     // Initialize session variables if not set
-    $_SESSION['custID'] = $_SESSION['custID'] ?? '';
-    $_SESSION['movies'] = $_SESSION['movies'] ?? [];
     $_SESSION['totalCost'] = $_SESSION['totalCost'] ?? 0;
     $_SESSION['moviesList'] = $_SESSION['moviesList'] ?? [];
     $_SESSION['customerName'] = $_SESSION['customerName'] ?? '';
     
-    // Handle form submission
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (isset($_POST['preview'])) {
     // Store selected values in session for preview
     $_SESSION['custID'] = $_POST['custID'];
     $_SESSION['movies'] = $_POST['movies'] ?? [];
-    $_SESSION['payMethod'] = $_POST['payMethod'];  // Capture payment method from the form
-    $_SESSION['payDetails'] = $_POST['payDetails'];  // Capture payment details from the form
+    $_SESSION['payMethod'] = $_POST['payMethod'];  
+    $_SESSION['payDetails'] = $_POST['payDetails'];  
     $custID = $_SESSION['custID'];
     $movieIDs = $_SESSION['movies'] ?? [];
     $totalCost = 0;
@@ -56,7 +53,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
                 exit();
             }
 
-            // Fetch customer name
+            // Get customer name
             $custQuery = "SELECT FirstName, LastName FROM Customers WHERE CustID = '$custID'";
             $custResult = @mysqli_query($dbc, $custQuery);
             $custRow = mysqli_fetch_assoc($custResult);
@@ -66,7 +63,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
             }
             $customerName = $custRow['LastName'] . ", " . $custRow['FirstName'];
     
-            // Fetch movie details
+            // Get movie details
             if (!empty($movieIDs)) {
                 $movieIDsString = implode(",", array_map('intval', $movieIDs));
                 $movieQuery = "SELECT MovieID, Title, Lang, Cost FROM Movies WHERE MovieID IN ($movieIDsString)";
@@ -84,21 +81,20 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
             
             $transactionPreview = true;
         } elseif (isset($_POST['confirm'])) {
-        // Process the transaction
+       
         $custID = $_SESSION['custID'];
         $movieIDs = $_SESSION['movies'];
         $empID = $_SESSION['empid'];
         $paymentMethod = $_SESSION['payMethod']; 
         $paymentDetails = $_SESSION['payDetails'];
         $rentalDate = date('Y-m-d');
-        $dueDate = date('Y-m-d', strtotime('+7 days')); // Assuming a 7-day rental period
+        $dueDate = date('Y-m-d', strtotime('+7 days')); // 7 day rental period
         $totalCost = $_SESSION['totalCost'];
         $numItems = count($movieIDs);
 
 
-        // Check if payment method and details exist in session
-        if (empty($_SESSION['payMethod']) || empty($_SESSION['payDetails'])) {
-            echo "<p>Please provide payment details.</p>";
+        if (empty($_SESSION['payMethod']) ) {
+            echo "<p>Please provide payment method.</p>";
             exit();
         }
 
@@ -147,71 +143,29 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 }
 ?>
 
-<style>
-    .addform form {
-        margin-top: 2%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-.addform{
-        width: 50% !important;
-
-}
-    .addform input[type=text], select, .addform input[type=tel], .addform input[type=email] {
-        width: 100%;
-        padding: 12px 20px;
-        margin: 8px 0;
-        display: inline-block;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-    }
-
-    .addform label {
-        font-size: 20px;
-        float: left;
-    }
-    #movies {
-    height: 50%;
-    font-size: x-large;
-    }
-    label{
-        font-weight:bold;
-    }
-    /*Preview  styles */
-.transdetails{
-    margin-top:2%;
-    margin-bottom:2%;
-    line-height:2rem;
-}
-.preview {
-    border: 2px solid orange;
-    width: 50%;
-    margin-top:2%;
-    margin-bottom:2%;
-}
-</style>
 
 <h1 class='pagetitle'>Create New Transaction</h1>
 
 <?php if ($transactionCompleted): ?>
+    <div class="preview">
     <div class="success">
-        <h2>Transaction Completed Successfully!</h2>
-        <p><strong>Customer:</strong> <?= $_SESSION['customerName']; ?></p>
-        <p><strong>Movies Rented:</strong></p>
+        <h1>Transaction Completed Successfully!</h1>
+        <div class="transdetails">
+        <p><strong>Customer:</strong><br> <?= $_SESSION['customerName']; ?></p>
+        <p><strong>Movies Rented:</strong><br></p>
         
             <?php foreach ($_SESSION['moviesList'] as $movie): ?>
                 <p><?= $movie['Title']; ?> - <?= $movie['Lang']; ?> ($<?= number_format($movie['Cost'], 2); ?>)</p>
             <?php endforeach; ?>
-        <p><strong>Payment Method:</strong> <?= $_SESSION['payMethod']; ?></p>
-        <p><strong>Payment Details:</strong> <?= $_SESSION['payDetails']; ?></p>
-        <p><strong>Total Cost:</strong> $<?= number_format($_SESSION['totalCost'], 2); ?></p>
+        <p><strong>Payment Method:</strong><br> <?= $_SESSION['payMethod']; ?></p>
+        <p><strong>Payment Details:</strong><br> <?= $_SESSION['payDetails']; ?></p>
+        <p><strong>Total Cost:</strong><br> $<?= number_format($_SESSION['totalCost'], 2); ?></p>
     </div>
-
+    </div>
+</div>
     <p id="searchUpdate"><a href="index.php">Back to Transactions</a></p>
 
     <?php 
-    // Only clear session variables once the success message is shown.
     unset($_SESSION['custID'], $_SESSION['movies'], $_SESSION['totalCost'], $_SESSION['moviesList'], $_SESSION['customerName']);
     ?>
 
@@ -222,15 +176,15 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         <br>
         <h1>Transaction Preview</h1>
         <div class="transdetails">
-                <p><strong>Customer:</strong> <?= $_SESSION['customerName']; ?></p>
-                <p><strong>Selected Movies:</strong></p>
+                <p><strong>Customer:</strong><br> <?= $_SESSION['customerName']; ?></p>
+                <p><strong>Selected Movies:</strong><br></p>
                     <?php foreach ($_SESSION['moviesList'] as $movie): ?>
                         <p><?= $movie['Title']; ?> - <?= $movie['Lang']; ?> ($<?= number_format($movie['Cost'], 2); ?>)</p>
                     <?php endforeach; ?>
 
-                    <p><strong>Payment Method:</strong> <?= $_SESSION['payMethod']; ?></p>
-                    <p><strong>Payment Details:</strong> <?= $_SESSION['payDetails']; ?></p>
-                <p><strong>Total Cost:</strong> $<?= number_format($_SESSION['totalCost'], 2); ?></p>
+                    <p><strong>Payment Method:</strong><br> <?= $_SESSION['payMethod']; ?></p>
+                    <p><strong>Payment Details:</strong><br> <?= $_SESSION['payDetails']; ?></p>
+                <p><strong>Total Cost:</strong><br> $<?= number_format($_SESSION['totalCost'], 2); ?></p>
             </div>
         <form action="" method="post">
             <input type="submit" name="confirm" value="Confirm Transaction">

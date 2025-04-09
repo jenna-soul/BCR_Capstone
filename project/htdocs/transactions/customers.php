@@ -2,23 +2,25 @@
 session_start();
 include ('../includes/header.php');
 
-//check session first
-if (!isset($_SESSION['empid'])){
+if (!isset($_SESSION['empid']) && !isset($_SESSION['email'])){
 	echo("	<h2>You are not logged in.</h2>
 			<form action='/BCR/htdocs/Home/login.php''>
-				<input type='submit' name='submit' value='Employee Login'/>
+				<input type='submit' name='submit' value='Login'/>
 			</form>
-			<form action='/BCR/htdocs/Home/logincustomer.php'>
+			<form action='logincustomer.php'>
 				<input type='submit' name='submit' value='Customer Login'/>
 			</form>
 			<p><br /><br /></p>");
 	exit();
-}else{
-    /*Employee login*/
+}
+
+elseif(isset($_SESSION['email'])){
     require_once ('../../mysqli_connect.php');
+    $email=$_SESSION['email'];
+    
+
     echo ("<center>");
-    echo ("<h1 class='pagetitle'>Transactions</h1>");
-    echo ("<p id='searchUpdate'><a href=add.php id='add'>New Transaction</a> | <a href=searchform.php id='search'>Search Transactions</a></p>");
+    echo ("<h1 class='pagetitle'>My Rentals</h1>");
 
     // Set the number of records to display per page
     $display = 10;
@@ -28,7 +30,9 @@ if (!isset($_SESSION['empid'])){
     if (isset($_GET['p_rented']) && is_numeric($_GET['p_rented'])) {
         $pages_rented = $_GET['p_rented'];
     } else {
-        $queryRented = "SELECT COUNT(TransID) FROM Transactions WHERE Status = 'Rented'";
+        $queryRented = "SELECT COUNT(TransID) FROM Transactions t
+                     JOIN Customers c ON t.CustID = c.CustID
+                     WHERE t.Status = 'Rented'AND c.Email='$email'";
         $resultRented = @mysqli_query($dbc, $queryRented);
         $rowRented = @mysqli_fetch_array($resultRented, MYSQLI_NUM);
         $recordsRented = $rowRented[0];
@@ -37,14 +41,14 @@ if (!isset($_SESSION['empid'])){
 
     $startRented = (isset($_GET['s_rented']) && is_numeric($_GET['s_rented'])) ? $_GET['s_rented'] : 0;
 
-    // Query for Rented transactions
+    // Rented transactions
     $queryRented = "SELECT t.TransID, CONCAT(c.FirstName, ' ', c.LastName) AS CustomerName, 
-                            CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName, 
                             t.RentalDate, t.DueDate, t.NumItems, t.TotalCost
                      FROM Transactions t
                      JOIN Customers c ON t.CustID = c.CustID
                      JOIN Users e ON t.EmpID = e.EmpID
                      WHERE t.Status = 'Rented'
+                     AND c.Email='$email'
                      LIMIT $startRented, $display";
     $resultRented = @mysqli_query($dbc, $queryRented);
 
@@ -53,7 +57,9 @@ if (!isset($_SESSION['empid'])){
         if (isset($_GET['p_returned']) && is_numeric($_GET['p_returned'])) {
             $pages_returned = $_GET['p_returned'];
         } else {
-            $queryReturned = "SELECT COUNT(TransID) FROM Transactions WHERE Status = 'Returned'";
+            $queryReturned = "SELECT COUNT(TransID) FROM Transactions t
+                     JOIN Customers c ON t.CustID = c.CustID
+                     WHERE t.Status = 'Returned' AND c.Email='$email'";
             $resultReturned = @mysqli_query($dbc, $queryReturned);
             $rowReturned = @mysqli_fetch_array($resultReturned, MYSQLI_NUM);
             $recordsReturned = $rowReturned[0];
@@ -62,48 +68,39 @@ if (!isset($_SESSION['empid'])){
 
     $startReturned = (isset($_GET['s_returned']) && is_numeric($_GET['s_returned'])) ? $_GET['s_returned'] : 0;
 
-    // Query for Returned transactions
+    // Returned transactions
     $queryReturned = "SELECT t.TransID, CONCAT(c.FirstName, ' ', c.LastName) AS CustomerName, 
-                             CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName, 
                              t.RentalDate, t.ReturnDate, t.NumItems, t.TotalCost
-                      FROM Transactions t
-                      JOIN Customers c ON t.CustID = c.CustID
-                      JOIN Users e ON t.EmpID = e.EmpID
-                      WHERE t.Status = 'Returned'
-                      LIMIT $startReturned, $display2";
+                            FROM Transactions t
+                            JOIN Customers c ON t.CustID = c.CustID
+                            JOIN Users e ON t.EmpID = e.EmpID
+                            WHERE t.Status = 'Returned'
+                            AND c.Email='$email'
+                            LIMIT $startRented, $display";
     $resultReturned = @mysqli_query($dbc, $queryReturned);
 
-    // Add CSS for highlighting overdue transactions in rented transactions only
+    // Highlight overdue transactions
     echo "<style>
             .highlight {
                 background-color: #FFDDC1 !important; /* Light red for overdue transactions */
             }
         </style>";
 
-    // Display Rented transactions table
-    echo "<h2 class='transTableHeader'>Rented Transactions</h2>";
+    echo "<h2 class='transTableHeader'>My Current Rentals</h2>";
     echo "<table id='allTables'><tr>
-            <th>Transaction ID</th><th>Customer</th><th>Employee</th><th>Rental Date</th><th>Due Date</th><th>Items</th><th>Total Cost</th><th>View Details</th><th>Return Transaction</th><th>Update Due Date</th>
+            <th>Customer Name</th><th>Rental Date</th><th>Due Date</th><th>Items</th><th>Total Cost</th><th>View Details</th>
             </tr>";
     while ($row = mysqli_fetch_array($resultRented, MYSQLI_ASSOC)) {
-        // Convert DueDate to a timestamp
         $dueDate = strtotime($row['DueDate']);
-        // Get the current date as a timestamp
         $currentDate = strtotime(date('Y-m-d'));
 
-        // Apply the highlight class if the DueDate is before today's date
         $highlightClass = ($dueDate < $currentDate) ? 'highlight' : '';
-
-        echo "<tr class='$highlightClass'><td>" . $row['TransID'] . "</td>";
-        echo "<td>" . $row['CustomerName'] . "</td>";
-        echo "<td>" . $row['EmployeeName'] . "</td>";
+        echo "<tr class='$highlightClass'><td>" . $row['CustomerName'] . "</td>";
         echo "<td>" . $row['RentalDate'] . "</td>";
         echo "<td>" . $row['DueDate'] . "</td>";
         echo "<td>" . $row['NumItems'] . "</td>";
         echo "<td>" . $row['TotalCost'] . "</td>";
-        echo "<td><a href='details.php?id=" . $row['TransID'] . "'>View Details</a></td>";
-        echo "<td><a href='return.php?id=" . $row['TransID'] . "'>Return</a></td>";
-        echo "<td><a href='updateform.php?id=" . $row['TransID'] . "'>Update</a></td>";
+        echo "<td><a href='details.php?id=" . $row['TransID'] . "'>View Details</a></td></tr>";
     }
     echo "</table> <hr>";
 
@@ -123,16 +120,14 @@ if (!isset($_SESSION['empid'])){
     echo '</tr></table>';
 }
 
-
     // Display Returned transactions table
-    echo "<h2 class='transTableHeader transTableHeader2'>Returned Transactions</h2>";
+    echo "<h2 class='transTableHeader transTableHeader2'>My Past Rentals</h2>";
     echo "<table id='allTables'><tr>
-            <th>Transaction ID</th><th>Customer</th><th>Employee</th><th>Rental Date</th><th>Return Date</th><th>Items</th><th>Total Cost</th><th>View Details</th>
+            <th>Customer Name</th><th>Rental Date</th><th>Return Date</th><th>Items</th><th>Total Cost</th><th>View Details</th>
             </tr>";
     while ($row2 = mysqli_fetch_array($resultReturned, MYSQLI_ASSOC)) {
-        echo "<tr><td>" . $row2['TransID'] . "</td>";
+        echo "<tr>";
         echo "<td>" . $row2['CustomerName'] . "</td>";
-        echo "<td>" . $row2['EmployeeName'] . "</td>";
         echo "<td>" . $row2['RentalDate'] . "</td>";
         echo "<td>" . $row2['ReturnDate'] . "</td>";
         echo "<td>" . $row2['NumItems'] . "</td>";

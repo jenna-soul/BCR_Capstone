@@ -4,15 +4,15 @@ session_start();
 include ('../includes/header.php');
 require_once('../../mysqli_connect.php');
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
-    echo("<h2>You are not logged in.</h2>
+if (!isset($_SESSION['empid'])){
+	echo("	<h2>You are not logged in.</h2>
 			<form action='/BCR/htdocs/Home/login.php''>
-            <input type='submit' name='submit' value='Login'/>
-        </form>
-    <p><br /><br /></p>");
-    
-    include ('../includes/footer.php');
-
+				<input type='submit' name='submit' value='Login'/>
+			</form>
+			<form action='/BCR/htdocs/Home/logincustomer.php'>
+				<input type='submit' name='submit' value='Customer Login'/>
+			</form>
+			<p><br /><br /></p>");
 	exit();
 }else{
 ?>
@@ -31,13 +31,11 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 </body>
 </html>
 <?php 
-// Check if the search form has been submitted
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Sanitize user input
-    $emp_id = mysqli_real_escape_string($dbc, $_SESSION['empid']);
     $searchTerm = isset($_POST['searchTerm']) ? mysqli_real_escape_string($dbc, $_POST['searchTerm']) : '';
 
-    // Build the query based on the search term
+
     $query = "SELECT TransID, 
                      CONCAT(Customers.FirstName, ' ', Customers.LastName) AS CustomerName, 
                      CONCAT(Users.FirstName, ' ', Users.LastName) AS EmployeeName,
@@ -47,21 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               JOIN Users ON Transactions.EmpID = Users.EmpID
               WHERE 1=1";
     
-    // Only add conditions if the search term is not empty
     if (!empty($searchTerm)) {
         if (is_numeric($searchTerm)) {
-            // Numeric fields (e.g., transaction ID, total cost, number of items)
+            // Searches numeric fields
             $query .= " AND (TransID = '$searchTerm' 
                             OR TotalCost = '$searchTerm' 
                             OR NumItems = '$searchTerm')";
         } elseif (strtotime($searchTerm)) {
-            // Date fields (e.g., rental date, due date)
+            // Searches date fields 
             $query .= " AND (RentalDate LIKE '%$searchTerm%' 
                             OR DueDate LIKE '%$searchTerm%'                            
                             OR ReturnDate LIKE'%$searchTerm%')";
         } else {
-            // Text fields (e.g., customer name, employee name, status)
-            // Perform the concatenation in the WHERE clause for CustomerName and EmployeeName
+            // Searches text fields 
             $query .= " AND (CONCAT(Customers.FirstName, ' ', Customers.LastName) LIKE '%$searchTerm%' 
                             OR CONCAT(Users.FirstName, ' ', Users.LastName) LIKE '%$searchTerm%')";
         }
@@ -71,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = @mysqli_query($dbc, $query);
     $num = mysqli_num_rows($result);
     
-    if ($num > 0) { // If it ran OK, display the results
+    if ($num > 0) { 
         echo "<h2>Your search returned $num entries.</h2>";
         echo "<table id='allTables'><tr>
         <th>Transaction ID</th><th>Customer</th><th>Employee</th><th>Rental Date</th><th>Due Date</th><th>Return Date</th><th>Items</th><th>Total Cost</th><th>View Details</th><th>Update</th>

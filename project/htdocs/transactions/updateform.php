@@ -1,10 +1,10 @@
 <?php
 session_start();
-// Include the header
+
 include('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
 			<form action='/BCR/htdocs/Home/login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -26,7 +26,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         exit();
     }
 
-    // Fetch the transaction details from the database
+    // Get the transaction details from the database
     $query = "SELECT * FROM Transactions WHERE TransID = $transID";
     $result = @mysqli_query($dbc, $query);
     $transaction = @mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -74,7 +74,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
         $rentalDate = $_POST['rentalDate'];
         $dueDate = $_POST['dueDate'];
 
-        // Perform the update query for the Transactions table
+        // Update the Transactions table
         $updateQuery = "UPDATE Transactions SET 
                             RentalDate = '$rentalDate',
                             DueDate = '$dueDate'
@@ -130,6 +130,5 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     mysqli_close($dbc);
 }
 
-// Include the footer
 include('../includes/footer.php');
 ?>

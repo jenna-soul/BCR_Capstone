@@ -1,14 +1,10 @@
 <?php
 session_start();
-
-// Ensure no output before this point
-ob_start();  // Start output buffering
-
-// Include the header
+ob_start(); 
 include('../includes/header.php');
 
 //check session first
-if (!isset($_SESSION['empid'])){// Print a customized message.
+if (!isset($_SESSION['empid'])){
     echo("<h2>You are not logged in.</h2>
 			<form action='/BCR/htdocs/Home/login.php''>
             <input type='submit' name='submit' value='Login'/>
@@ -60,7 +56,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     echo "<p><strong>Number of Items:</strong> " . $transaction['NumItems'] . "</p>";
     echo "<p><strong>Total Cost:</strong> $" . $transaction['TotalCost'] . "</p>";
 
-    // Fetch the movies checked out in this transaction
+    // Get the movies checked out in this transaction
     $movieQuery = "SELECT m.Title, m.Cost, m.MovieId
                    FROM TransactionMovies tm
                    JOIN Movies m ON tm.MovieID = m.MovieID
@@ -80,10 +76,9 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
 
     // Handle the return transaction functionality
     if (isset($_POST['returnTransaction'])) {
-        // Perform the update for the Transactions table (set DueDate to NULL and Status to 'Returned')
+        // Update  the Transactions table - set DueDate to NULL and Status to 'Returned'
         $updateQuery = "UPDATE Transactions SET DueDate = NULL, Status = 'Returned', ReturnDate = CURRENT_TIMESTAMP WHERE TransID = $transID;"; 
         $updateResult = @mysqli_query($dbc, $updateQuery);
-
 
         // Get all movie IDs for transaction id
         $movieQuery = "SELECT MovieID FROM TransactionMovies WHERE TransID = $transID";
@@ -106,7 +101,7 @@ if (!isset($_SESSION['empid'])){// Print a customized message.
     } elseif (isset($_POST['cancel'])) {
         // Redirect to index.php if canceled
         header("Location: index.php");
-        exit();  // Ensure no further code is executed after the redirect
+        exit();  
     } else {
         // Display the confirmation form
         echo "<div class='button-container'>
