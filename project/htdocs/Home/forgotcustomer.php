@@ -1,14 +1,14 @@
 <?php 
 include ('../includes/header.php');
 
-if (isset($_POST['submitted'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	require_once ('../../mysqli_connect.php'); // Connect to the db.
 	$errors = array(); 
 
 	if (empty($_POST['email'])) {
-		$errors[] = 'You forgot to enter your employee ID.';
+		$errors[] = 'You forgot to enter your email.';
 	} else {
-		$e = mysqli_real_escape_string($dbc, $_POST['email']);
+		$e = mysqli_real_escape_string($dbc, trim($_POST['email']));
 	}
 
 	if (empty($errors)) { 
@@ -17,7 +17,7 @@ if (isset($_POST['submitted'])) {
 		if (mysqli_num_rows($result)==1) {
 			while ($row=mysqli_fetch_array($result, MYSQLI_ASSOC)){
 				$p=$row['password']; 
-				$u=$row['email']; 
+				$u=$row['Email']; 
 			}								
 			$to=$e; 
 			$subject="Forgotten Password";
@@ -56,8 +56,8 @@ if (isset($_POST['submitted'])) {
 ?>
 
 <h2>Forgot email or password?</h2>
-<form action="forgot.php" method="post">
-	<p>Email: <input type="text" name="email" size="20" maxlength="40" style="width: 30%;" value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>"  /> </p>
+<form action="forgotcustomer.php" method="post">
+	<p>Email: <input type="text" name="email" size="20" maxlength="40" style="width: 30%;" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"  /> </p>
 	<input type="submit" name="submit" value="Submit" /></p>
 	<input type="hidden" name="submitted" value="TRUE" />
 </form>
