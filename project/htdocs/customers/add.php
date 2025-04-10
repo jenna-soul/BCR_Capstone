@@ -20,6 +20,14 @@ if (!isset($_SESSION['empid'])){
         $lastName = $_POST['lastName'];
         $email = $_POST['email'];
         $phone = $_POST['phone'];
+		// Validate phone number format (US format: (xxx) xxx-xxxx, xxx-xxx-xxxx, etc.)
+		if (!preg_match('/^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/', $phone)) {
+            echo "<h2>The record could not be added due to a system error.</h2>";
+			echo "<p>Invalid phone number format. Please use a format like 555-123-4567.</p>";
+            echo "<p style='margin-top:2%'><a href='javascript:history.back()'>Back</a></p></center>";
+			include('../includes/footer.php');
+			exit();
+		}
         $address = $_POST['address'];
         $city = $_POST['city'];
         $state = $_POST['state'];
