@@ -35,7 +35,7 @@ if (!isset($_SESSION['empid']) && !isset($_SESSION['email'])){
         <form action='login.php'>
             <input type='submit' name='submit' value='Employee Login'/>
         </form>
-        <form action='loginCustomer.php'>
+        <form action='logincustomer.php'>
             <input type='submit' name='submit' value='Customer Login'/>
         </form>
     <p><br /><br /></p>");
